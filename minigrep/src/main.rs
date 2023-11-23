@@ -1,4 +1,5 @@
 use std::env;       // 使用 Rust 标准库提供的 std::env::args 函数获取传递给 minigrep 的命令行参数迭代器
+use std::fs;
 
 fn main() {
     // 使用 collect 函数将迭代器转换成一个包含所有迭代器产出值的动态数组
@@ -12,4 +13,9 @@ fn main() {
 
     println!("query = {}", query);
     println!("filename = {}", filename);
+
+    let contents = fs::read_to_string("poem.txt")
+        .expect("Something went wrong reading the file");
+
+    println!("With text:\n{}", contents);
 }
