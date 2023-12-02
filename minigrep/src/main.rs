@@ -1,10 +1,14 @@
 use std::env;
 use std::fs;
+use std::process;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
 
-    let config = Config::new(&args);
+    let config = Config::new(&args).unwrap_or_else(|err| {
+        println!("Problem parsing arguments: {}", err);
+        process::exit(1);
+    });
     println!("query = {}", config.query);
     println!("filename = {}", config.filename);
     println!();
@@ -21,11 +25,15 @@ struct Config {
 }
 
 impl Config {
-    fn new(args: &[String]) -> Self {
+    fn new(args: &[String]) -> Result<Config, &'static str> {
+        if args.len() < 3 {
+            return Err("not enough arguments");
+        }
+
         // args[0] 为当前执行的二进制文件名称，即 target/debug/minigrep.exe
         let query = args[1].clone();
         let filename = args[2].clone();
 
-        Config { query, filename }
+        Ok(Config { query, filename })
     }
 }
