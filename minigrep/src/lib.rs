@@ -29,7 +29,15 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
 
     let contents = fs::read_to_string(config.filename)?;
 
-    println!("With text:\n{}", contents);
+    search(&config.query, &contents);
 
     Ok(())
+}
+
+fn search(query: &str, content: &str) {
+    for line in content.lines() {
+        if line.contains(query) {
+            println!("{}", line);
+        }
+    }
 }
