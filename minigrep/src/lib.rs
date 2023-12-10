@@ -34,10 +34,34 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
-fn search(query: &str, content: &str) {
+fn search<'a>(query: &str, content: &'a str) -> Vec<&'a str> {
+    let mut results: Vec<&str> = Vec::new();
+
     for line in content.lines() {
         if line.contains(query) {
-            println!("{}", line);
+            results.push(line);
         }
+    }
+
+    results
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_search() {
+        let query = "test";
+        let s = "
+111
+222 test ??
+333
+        ";
+
+        assert_eq!(
+            vec!["222 test ??"],
+            search(query, &s)
+        )
     }
 }
